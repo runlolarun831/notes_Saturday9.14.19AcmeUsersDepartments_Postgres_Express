@@ -59,7 +59,7 @@ const SQL = `
     const response = await client.query('SELECT * FROM categories');
     return response.rows;
   };
-  //method has a separate route getAllCategories
+  //method has a separate route from getAllCategories
   const findAllProducts = async()=> {
     const response = await client.query('SELECT * FROM products');
     return response.rows;
