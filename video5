@@ -1,0 +1,172 @@
+Video#5.  constraints unique not null
+
+*******************************************************************************************************************************
+UNIQUE name constraint . Below 2 products with name foo. Will only list the first one
+VARCHAR allows 255 characters
+*******************************************************************************************************************************
+DROP TABLE IF EXISTS products;
+
+CREATE TABLE products(
+  id UUID PRIMARY KEY,
+  name VARCHAR(255) UNIQUE
+);
+--e4d3fdab-00ca-4c1e-abd2-a24cbbe01a66
+--985b402f-b6a3-4f0a-8bb9-860662620415
+--ebaae031-4147-4189-b3a8-de344e528231
+INSERT INTO products(id, name) VALUES('e4d3fdab-00ca-4c1e-abd2-a24cbbe01a66', 'foo');
+INSERT INTO products(id, name) VALUES('985b402f-b6a3-4f0a-8bb9-860662620415','foo');
+INSERT INTO products(id, name) VALUES('ebaae031-4147-4189-b3a8-de344e528231', 'bazz');
+SELECT * FROM products;
+
+——————————————————————————————————————
+
+admins-MacBook-Pro:postgresql_demo lourdesmonahan$ psql -f scripts.sql
+DROP TABLE
+CREATE TABLE
+INSERT 0 1
+psql:scripts.sql:11: ERROR:  duplicate key value violates unique constraint "products_name_key"
+DETAIL:  Key (name)=(foo) already exists.
+INSERT 0 1
+                  id                  | name
+--------------------------------------+------
+ e4d3fdab-00ca-4c1e-abd2-a24cbbe01a66 | foo
+ ebaae031-4147-4189-b3a8-de344e528231 | bazz
+(2 rows)
+
+
+*******************************************************************************************************************************
+UNIQUE NOT NULL. Will not include any with a null value
+Example has a null value for name so it doesn’t include 3rd INSERT
+*******************************************************************************************************************************
+DROP TABLE IF EXISTS products;
+
+CREATE TABLE products(
+  id UUID PRIMARY KEY,
+  name VARCHAR(255) UNIQUE NOT NULL
+);
+--e4d3fdab-00ca-4c1e-abd2-a24cbbe01a66
+--985b402f-b6a3-4f0a-8bb9-860662620415
+--ebaae031-4147-4189-b3a8-de344e528231
+INSERT INTO products(id, name) VALUES('e4d3fdab-00ca-4c1e-abd2-a24cbbe01a66', 'foo');
+INSERT INTO products(id, name) VALUES('985b402f-b6a3-4f0a-8bb9-860662620415','bar');
+INSERT INTO products(id) VALUES('ebaae031-4147-4189-b3a8-de344e528231');
+SELECT * FROM products;
+—————————————————————————————————————————————————————————————
+admins-MacBook-Pro:postgresql_demo lourdesmonahan$ psql -f scripts.sql
+DROP TABLE
+CREATE TABLE
+INSERT 0 1
+INSERT 0 1
+psql:scripts.sql:12: ERROR:  null value in column "name" violates not-null constraint
+DETAIL:  Failing row contains (ebaae031-4147-4189-b3a8-de344e528231, null).
+                  id                  | name
+--------------------------------------+------
+ e4d3fdab-00ca-4c1e-abd2-a24cbbe01a66 | foo
+ 985b402f-b6a3-4f0a-8bb9-860662620415 | bar
+(2 rows)
+
+admins-MacBook-Pro:postgresql_demo lourdesmonahan$
+
+
+*******************************************************************************************************************************
+in_stock BOOLEAN        Table will have in_stock column but it will be empty
+**************************************************************************************************************************
+DROP TABLE IF EXISTS products;
+
+CREATE TABLE products(
+  id UUID PRIMARY KEY,
+  name VARCHAR(255) UNIQUE NOT NULL,
+  in_stock BOOLEAN
+);
+--e4d3fdab-00ca-4c1e-abd2-a24cbbe01a66
+--985b402f-b6a3-4f0a-8bb9-860662620415
+--ebaae031-4147-4189-b3a8-de344e528231
+INSERT INTO products(id, name) VALUES('e4d3fdab-00ca-4c1e-abd2-a24cbbe01a66', 'foo');
+INSERT INTO products(id, name) VALUES('985b402f-b6a3-4f0a-8bb9-860662620415','bar');
+INSERT INTO products(id, name) VALUES('ebaae031-4147-4189-b3a8-de344e528231', 'bazz');
+SELECT * FROM products;
+
+___________________________________________________________________________________________
+
+admins-MacBook-Pro:postgresql_demo lourdesmonahan$ psql -f scripts.sql
+DROP TABLE
+CREATE TABLE
+INSERT 0 1
+INSERT 0 1
+INSERT 0 1
+                                           id                  | name | in_stock
+--------------------------------------+------+----------
+ e4d3fdab-00ca-4c1e-abd2-a24cbbe01a66 | foo  |
+ 985b402f-b6a3-4f0a-8bb9-860662620415 | bar  |
+ ebaae031-4147-4189-b3a8-de344e528231 | bazz |
+(3 rows)
+
+
+*************************************************************************************************************************************
+in_stock BOOLEAN  DEFAULT true      Table will have in_stock column and all will be true unless inserted with false
+*************************************************************************************************************************************
+DROP TABLE IF EXISTS products;
+
+CREATE TABLE products(
+  id UUID PRIMARY KEY,
+  name VARCHAR(255) UNIQUE NOT NULL,
+  in_stock BOOLEAN DEFAULT true
+);
+--e4d3fdab-00ca-4c1e-abd2-a24cbbe01a66
+--985b402f-b6a3-4f0a-8bb9-860662620415
+--ebaae031-4147-4189-b3a8-de344e528231
+INSERT INTO products(id, name) VALUES('e4d3fdab-00ca-4c1e-abd2-a24cbbe01a66', 'foo');
+INSERT INTO products(id, name) VALUES('985b402f-b6a3-4f0a-8bb9-860662620415','bar');
+INSERT INTO products(id, name) VALUES('ebaae031-4147-4189-b3a8-de344e528231', 'bazz');
+SELECT * FROM products;
+___________________________________________________________________________________________
+admins-MacBook-Pro:postgresql_demo lourdesmonahan$ psql -f scripts.sql
+DROP TABLE
+CREATE TABLE
+INSERT 0 1
+INSERT 0 1
+INSERT 0 1
+                  id                  | name | in_stock
+--------------------------------------+------+----------
+ e4d3fdab-00ca-4c1e-abd2-a24cbbe01a66 | foo  | t
+ 985b402f-b6a3-4f0a-8bb9-860662620415 | bar  | t
+ ebaae031-4147-4189-b3a8-de344e528231 | bazz | t
+(3 rows)
+
+*************************************************************************************************************************************
+in_stock BOOLEAN  DEFAULT true      Table will have in_stock column and all will be true unless inserted with false
+*************************************************************************************************************************************
+DROP TABLE IF EXISTS products;
+
+CREATE TABLE products(
+  id UUID PRIMARY KEY,
+  name VARCHAR(255) UNIQUE NOT NULL,
+  in_stock BOOLEAN DEFAULT true
+);
+--e4d3fdab-00ca-4c1e-abd2-a24cbbe01a66
+--985b402f-b6a3-4f0a-8bb9-860662620415
+--ebaae031-4147-4189-b3a8-de344e528231
+INSERT INTO products(id, name) VALUES('e4d3fdab-00ca-4c1e-abd2-a24cbbe01a66', 'foo');
+INSERT INTO products(id, name) VALUES('985b402f-b6a3-4f0a-8bb9-860662620415','bar');
+INSERT INTO products(id, name, in_stock) VALUES('ebaae031-4147-4189-b3a8-de344e528231', 'bazz', false);
+SELECT * FROM products;
+_________________________________________________________________________________________________________________________________________
+
+admins-MacBook-Pro:postgresql_demo lourdesmonahan$ psql -f scripts.sql
+DROP TABLE
+CREATE TABLE
+INSERT 0 1
+INSERT 0 1
+INSERT 0 1
+                  id                  | name | in_stock
+--------------------------------------+------+----------
+ e4d3fdab-00ca-4c1e-abd2-a24cbbe01a66 | foo  | t
+ 985b402f-b6a3-4f0a-8bb9-860662620415 | bar  | t
+ ebaae031-4147-4189-b3a8-de344e528231 | bazz | f
+(3 rows)
+
+admins-MacBook-Pro:postgresql_demo lourdesmonahan$
+
+
+
+

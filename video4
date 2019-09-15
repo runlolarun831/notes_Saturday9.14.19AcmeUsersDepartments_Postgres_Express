@@ -1,0 +1,73 @@
+Video#4.  psql primary keys SERIAL or UUID
+Copy/paste of terminal
+
+********************************************************************************************************
+Generates id for us.  It will increment each by 1    scripts.sql
+********************************************************************************************************
+DROP TABLE IF EXISTS products;
+
+CREATE TABLE products(
+  id SERIAL PRIMARY KEY,
+  name VARCHAR(255)
+);
+
+INSERT INTO products(name) VALUES('foo');
+INSERT INTO products(name) VALUES('bar');
+SELECT * FROM products;
+__________________________________________________________________________________________
+
+admins-MacBook-Pro:postgresql_demo lourdesmonahan$ psql -f scripts.sql
+DROP TABLE
+CREATE TABLE
+INSERT 0 1
+INSERT 0 1
+ id | name
+----+------
+  1 | foo
+  2 | bar
+(2 rows)
+__________________________________________________________________________________________
+admins-MacBook-Pro:postgresql_demo lourdesmonahan$ psql -f scripts.sql
+DROP TABLE
+CREATE TABLE
+INSERT 0 1
+INSERT 0 1
+INSERT 0 1
+ id | name
+----+------
+  1 | foo
+  2 | bar
+  3 | bazz
+(3 rows)
+
+**************************************************************************************************************************
+Prof like to use unique id. Postgres doesn’t have a built in way to make unique identifier.  Go online to a UUID Generator.  Disadvatage that it takes up space.Advantage is that it is unique.    scripts.sql
+**************************************************************************************************************************
+DROP TABLE IF EXISTS products;
+
+CREATE TABLE products(
+  id UUID PRIMARY KEY,
+  name VARCHAR(255)
+);
+--e4d3fdab-00ca-4c1e-abd2-a24cbbe01a66
+--985b402f-b6a3-4f0a-8bb9-860662620415
+--ebaae031-4147-4189-b3a8-de344e528231
+INSERT INTO products(id, name) VALUES('e4d3fdab-00ca-4c1e-abd2-a24cbbe01a66', 'foo');
+INSERT INTO products(id, name) VALUES('985b402f-b6a3-4f0a-8bb9-860662620415','bar');
+INSERT INTO products(id, name) VALUES('ebaae031-4147-4189-b3a8-de344e528231', 'bazz');
+SELECT * FROM products;
+__________________________________________________________________________________________
+
+admins-MacBook-Pro:postgresql_demo lourdesmonahan$ psql -f scripts.sql
+DROP TABLE
+CREATE TABLE
+INSERT 0 1
+INSERT 0 1
+INSERT 0 1
+                  id                  | name
+--------------------------------------+------
+ e4d3fdab-00ca-4c1e-abd2-a24cbbe01a66 | foo
+ 985b402f-b6a3-4f0a-8bb9-860662620415 | bar
+ ebaae031-4147-4189-b3a8-de344e528231 | bazz
+(3 rows)
+

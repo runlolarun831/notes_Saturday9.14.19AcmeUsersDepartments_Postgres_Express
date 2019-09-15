@@ -1,0 +1,180 @@
+video#2-3psql command line
+Copy/paste of TERMINAL
+
+
+!!PSQL FILES CREATE A TABLE
+Copy/paste of terminal
+video#2
+******************************************************************************
+
+
+
+Saturday9.14.19AcmeUsersDepartments_Postgres_Express/
+admins-MacBook-Pro:Saturday9.14.19AcmeUsersDepartments_Postgres_Express lourdesmonahan$ psql
+psql (11.5)
+Type "help" for help.
+******************************************************************************
+
+lourdesmonahan=# \q
+admins-MacBook-Pro:Saturday9.14.19AcmeUsersDepartments_Postgres_Express lourdesmonahan$ \l
+-bash: l: command not found
+admins-MacBook-Pro:Saturday9.14.19AcmeUsersDepartments_Postgres_Express lourdesmonahan$ psql
+psql (11.5)
+Type "help" for help.
+
+lourdesmonahan=# create database a_shiny_new_db;
+CREATE DATABASE
+lourdesmonahan=# \c a_shiny_new_db;
+You are now connected to database "a_shiny_new_db" as user "lourdesmonahan".
+a_shiny_new_db=# \l
+                                       List of databases
+      Name      |     Owner      | Encoding |   Collate   |    Ctype    |   Access privileges
+----------------+----------------+----------+-------------+-------------+-----------------------
+ a_shiny_new_db | lourdesmonahan | UTF8     | en_US.UTF-8 | en_US.UTF-8 |
+ lourdesmonahan | lourdesmonahan | UTF8     | en_US.UTF-8 | en_US.UTF-8 |
+ postgres       | postgres       | UTF8     | en_US.UTF-8 | en_US.UTF-8 |
+ template0      | postgres       | UTF8     | en_US.UTF-8 | en_US.UTF-8 | =c/postgres          +
+                |                |          |             |             | postgres=CTc/postgres
+ template1      | postgres       | UTF8     | en_US.UTF-8 | en_US.UTF-8 | =c/postgres          +
+                |                |          |             |             | postgres=CTc/postgres
+(5 rows)
+
+a_shiny_new_db=# \d
+Did not find any relations.
+****************************************************************************************************
+a_shiny_new_db=# CREATE TABLE(name VARCHAR(255));
+ERROR:  syntax error at or near "("
+LINE 1: CREATE TABLE(name VARCHAR(255));
+                    ^
+****************************************************************************************************
+a_shiny_new_db=# CREATE TABLE products(name VARCHAR(255));
+CREATE TABLE
+a_shiny_new_db=# \d
+             List of relations
+ Schema |   Name   | Type  |     Owner
+--------+----------+-------+----------------
+ public | products | table | lourdesmonahan
+(1 row)
+
+a_shiny_new_db=# SELECT * FROM products;
+ name
+------
+(0 rows)
+
+a_shiny_new_db=# INSERT INTO products(name) VALUES ('foo');
+INSERT 0 1
+a_shiny_new_db=# INSERT INTO products(name) VALUES ('bar');
+INSERT 0 1
+a_shiny_new_db=# SELECT * from products;
+ name
+------
+ foo
+ bar
+(2 rows)
+
+a_shiny_new_db=# DROP TABLE products;
+DROP TABLE
+a_shiny_new_db=# \d
+Did not find any relations.
+a_shiny_new_db=# \q
+admins-MacBook-Pro:Saturday9.14.19AcmeUsersDepartments_Postgres_Express lourdesmonahan$ psql
+psql (11.5)
+Type "help" for help.
+
+
+****************************************************************************************************
+Database no longer exists after DROP
+****************************************************************************************************
+lourdesmonahan=# DROP DATABASE a_shiny_new_db;
+DROP DATABASE
+lourdesmonahan=#
+
+
+****************************************************************************************************
+The help menu will use -f to run script.sql
+****************************************************************************************************
+Usage:
+  psql [OPTION]... [DBNAME [USERNAME]]
+
+General options:
+  -c, --command=COMMAND    run only single command (SQL or internal) and exit
+  -d, --dbname=DBNAME      database name to connect to (default: "lourdesmonahan")
+  -f, --file=FILENAME      execute commands from file, then exit
+  -l, --list               list available databases, then exit
+  -v, --set=, --variable=NAME=VALUE
+                           set psql variable NAME to VALUE
+                           (e.g., -v ON_ERROR_STOP=1)
+  -V, --version            output version information, then exit
+  -X, --no-psqlrc          do not read startup file (~/.psqlrc)
+  -1 ("one"), --single-transaction
+                           execute as a single transaction (if non-interactive)
+  -?, --help[=options]     show this help, then exit
+      --help=commands      list backslash commands, then exit
+      --help=variables     list special variables, then exit
+
+Input and output options:
+  -a, --echo-all           echo all input from script
+  -b, --echo-errors        echo failed commands
+  -e, --echo-queries       echo commands sent to server
+  -E, --echo-hidden        display queries that internal commands generate
+  -L, --log-file=FILENAME  send session log to file
+  -n, --no-readline        disable enhanced command line editing (readline)
+  -o, --output=FILENAME    send query results to file (or |pipe)
+  -q, --quiet              run quietly (no messages, only query output)
+  -s, --single-step        single-step mode (confirm each query)
+  -S, --single-line        single-line mode (end of line terminates SQL command)
+
+Output format options:
+  -A, --no-align           unaligned table output mode
+  -F, --field-separator=STRING
+                           field separator for unaligned output (default: "|")
+  -H, --html               HTML table output mode
+  -P, --pset=VAR[=ARG]     set printing option VAR to ARG (see \pset command)
+  -R, --record-separator=STRING
+                           record separator for unaligned output (default: newline)
+  -t, --tuples-only        print rows only
+  -T, --table-attr=TEXT    set HTML table tag attributes (e.g., width, border)
+  -x, --expanded           turn on expanded table output
+  -z, --field-separator-zero
+                           set field separator for unaligned output to zero byte
+  -0, --record-separator-zero
+                           set record separator for unaligned output to zero byte
+
+Connection options:
+  -h, --host=HOSTNAME      database server host or socket directory (default: "local socket")
+  -p, --port=PORT          database server port (default: "5432")
+  -U, --username=USERNAME  database user name (default: "lourdesmonahan")
+  -w, --no-password        never prompt for password
+  -W, --password           force password prompt (should happen automatically)
+********************************************************************************
+
+********************************************************************************
+!!PSQL FILES CREATE A TABLE
+Copy/paste of TERMINAL
+video#3
+
+**********************************************************************************************************************************************************************************
+admins-MacBook-Pro:postgresql_demo lourdesmonahan$ psql -f scripts.sql the_acme_db;
+CREATE TABLE
+ name
+------
+(0 rows)
+**********************************************************************************************************************************************************************************
+admins-MacBook-Pro:postgresql_demo lourdesmonahan$ psql -f scripts.sql the_acme_db;
+psql:scripts.sql:3: ERROR:  relation "products" already exists
+ name
+------
+(0 rows)
+**********************************************************************************************************************************************************************************
+admins-MacBook-Pro:postgresql_demo lourdesmonahan$ psql -f scripts.sql the_acme_db;
+DROP TABLE
+CREATE TABLE
+INSERT 0 1
+INSERT 0 1
+ name
+------
+ foo
+ bar
+(2 rows)
+
+admins-MacBook-Pro:postgresql_demo lourdesmonahan$

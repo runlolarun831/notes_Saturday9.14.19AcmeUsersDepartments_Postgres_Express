@@ -1,0 +1,179 @@
+Video#6. Foreign keys
+*************************************************************************************************************************************
+Created another table for categories.  Order is important.  Written before products
+ALSO ORDER OF DROP TABLE IS IMPORTANT.  MUST DROP CHILDREN(PRODUCTS) BEFORE YOU DROP PARENT (CATEGORIES)
+**************************************************************************************************************************************
+DROP TABLE IF EXISTS products;
+DROP TABLE IF EXISTS categories;
+
+
+CREATE TABLE categories(
+  id UUID PRIMARY KEY,
+  name VARCHAR(255) UNIQUE NOT NULL
+);
+
+CREATE TABLE products(
+  id UUID PRIMARY KEY,
+  name VARCHAR(255) UNIQUE NOT NULL,
+  in_stock BOOLEAN DEFAULT true
+);
+--a1eb855a-1dd3-4aec-9dd7-aff78be20d0e
+--fe5a1929-78f2-4c94-a78c-d548952981ea
+--54f43c6b-56a1-4a58-92fb-7a8147ad8eef
+INSERT INTO categories(id, name) VALUES('a1eb855a-1dd3-4aec-9dd7-aff78be20d0e', 'foo category');
+INSERT INTO categories(id, name) VALUES('fe5a1929-78f2-4c94-a78c-d548952981ea','bar category');
+
+--e4d3fdab-00ca-4c1e-abd2-a24cbbe01a66
+--985b402f-b6a3-4f0a-8bb9-860662620415
+--ebaae031-4147-4189-b3a8-de344e528231
+INSERT INTO products(id, name) VALUES('e4d3fdab-00ca-4c1e-abd2-a24cbbe01a66', 'foo');
+INSERT INTO products(id, name) VALUES('985b402f-b6a3-4f0a-8bb9-860662620415','bar');
+INSERT INTO products(id, name, in_stock) VALUES('ebaae031-4147-4189-b3a8-de344e528231', 'bazz', false);
+SELECT * FROM categories;
+SELECT * FROM products;
+
+_________________________________________________________________________________________
+
+admins-MacBook-Pro:postgresql_demo lourdesmonahan$ psql -f scripts.sql
+DROP TABLE
+DROP TABLE
+CREATE TABLE
+CREATE TABLE
+INSERT 0 1
+INSERT 0 1
+INSERT 0 1
+INSERT 0 1
+INSERT 0 1
+                  id                  |     name
+--------------------------------------+--------------
+ a1eb855a-1dd3-4aec-9dd7-aff78be20d0e | foo category
+ fe5a1929-78f2-4c94-a78c-d548952981ea | bar category
+(2 rows)
+
+                  id                  | name | in_stock
+--------------------------------------+------+----------
+ e4d3fdab-00ca-4c1e-abd2-a24cbbe01a66 | foo  | t
+ 985b402f-b6a3-4f0a-8bb9-860662620415 | bar  | t
+:...skipping...
+                  id                  | name | in_stock
+                  id                  | name | in_stock
+--------------------------------------+------+----------
+ e4d3fdab-00ca-4c1e-abd2-a24cbbe01a66 | foo  | t
+ 985b402f-b6a3-4f0a-8bb9-860662620415 | bar  | t
+ ebaae031-4147-4189-b3a8-de344e528231 | bazz | f
+(3 rows)
+*************************************************************************************************************************************
+Give products a category ID
+**************************************************************************************************************************************
+DROP TABLE IF EXISTS products;
+DROP TABLE IF EXISTS categories;
+
+CREATE TABLE categories(
+  Id UUID PRIMARY KEY,
+  name VARCHAR(255) UNIQUE NOT NULL
+);
+
+CREATE TABLE products(
+  Id UUID PRIMARY KEY,
+  name VARCHAR(255) UNIQUE NOT NULL,
+in_stock BOOLEAN DEFAULT true,
+category_id UUID
+);
+
+--a1eb855a-1dd3-4aec-9dd7-aff78be20d0e
+--fe5a1929-78f2-4c94-a78c-d548952981ea'
+--54f43c6b-56a1-4a58-92fb-7a8147ad8eef
+
+--e4d3fdab-00ca-4c1e-abd2-a24cbbe01a66
+--985b402f-b6a3-4f0a-8bb9-860662620415
+--51e15f8c-76bb-4e67-81c6-cfd83b6b0c73
+--ebaae031-4147-4189-b3a8-de344e528231
+
+INSERT INTO categories(id,name) VALUES('a1eb855a-1dd3-4aec-9dd7-aff78be20d0e','foo category');
+INSERT INTO categories(id,name) VALUES('fe5a1929-78f2-4c94-a78c-d548952981ea','bar category');
+INSERT INTO categories(id,name) VALUES('54f43c6b-56a1-4a58-92fb-7a8147ad8eef','bazz category');
+INSERT INTO products(id,name, category_id) VALUES('e4d3fdab-00ca-4c1e-abd2-a24cbbe01a66','foo1', 'a1eb855a-1dd3-4aec-9dd7-aff78be20d0e');
+INSERT INTO products(id,name, category_id) VALUES('985b402f-b6a3-4f0a-8bb9-860662620415','foo2','a1eb855a-1dd3-4aec-9dd7-aff78be20d0e');
+INSERT INTO products(id,name, in_stock, category_id) VALUES('ebaae031-4147-4189-b3a8-de344e528231','bar1', false, 'fe5a1929-78f2-4c94-a78c-d548952981ea');
+Select * from products;
+Select * from categories;
+_____________________________________________________________________________________________________________________________________
+
+admins-MacBook-Pro:postgresql_demo lourdesmonahan$ psql -f scripts.sql the_acme_db;
+DROP TABLE
+DROP TABLE
+CREATE TABLE
+CREATE TABLE
+INSERT 0 1
+INSERT 0 1
+INSERT 0 1
+INSERT 0 1
+INSERT 0 1
+                  id                  | name | in_stock |             category_id
+--------------------------------------+------+----------+--------------------------------------
+ e4d3fdab-00ca-4c1e-abd2-a24cbbe01a66 | foo1 | t        | a1eb855a-1dd3-4aec-9dd7-aff78be20d0e
+ 985b402f-b6a3-4f0a-8bb9-860662620415 | foo2 | t        | a1eb855a-1dd3-4aec-9dd7-aff78be20d0e
+ ebaae031-4147-4189-b3a8-de344e528231 | bar1 | f        | fe5a1929-78f2-4c94-a78c-d548952981ea
+(3 rows)
+
+                  id                  |     name
+--------------------------------------+--------------
+ a1eb855a-1dd3-4aec-9dd7-aff78be20d0e | foo category
+ fe5a1929-78f2-4c94-a78c-d548952981ea | bar category
+(2 rows)
+
+
+*************************************************************************************************************************************
+Foreign key constraint - don’t want any value to go as a category id. You want it to actually be a category so use
+category_id UUID REFERENCES categories(id)
+Example code has added number that doesn’t match any of the id in categories
+Enforcing the integrity of the database
+*************************************************************************************************************************************
+CREATE TABLE products(
+  id UUID PRIMARY KEY,
+  name VARCHAR(255) UNIQUE NOT NULL,
+  in_stock BOOLEAN DEFAULT true,
+  category_id UUID REFERENCES categories(id)
+);
+--a1eb855a-1dd3-4aec-9dd7-aff78be20d0e
+--fe5a1929-78f2-4c94-a78c-d548952981ea
+--54f43c6b-56a1-4a58-92fb-7a8147ad8eef
+INSERT INTO categories(id, name) VALUES('a1eb855a-1dd3-4aec-9dd7-aff78be20d0e', 'foo category');
+INSERT INTO categories(id, name) VALUES('fe5a1929-78f2-4c94-a78c-d548952981ea','bar category');
+
+--e4d3fdab-00ca-4c1e-abd2-a24cbbe01a66
+--985b402f-b6a3-4f0a-8bb9-860662620415
+--ebaae031-4147-4189-b3a8-de344e528231
+INSERT INTO products(id, name, category_id) VALUES('e4d3fdab-00ca-4c1e-abd2-a24cbbe01a66', 'foo1','a1eb855a-1dd3-4aec-9dd7-aff78be20d0e' );
+INSERT INTO products(id, name, category_id) VALUES('985b402f-b6a3-4f0a-8bb9-860662620415','foo2', 'a1eb855a-1dd3-4aec-9dd7-aff78be20d0e');
+--INSERT INTO products(id, name, in_stock, category_id) VALUES('ebaae031-4147-4189-b3a8-de344e528231', 'bar1', false, 'fe5a1929-78f2-4c94-a78c-d548952981ea');
+INSERT INTO products(id, name, in_stock, category_id) VALUES('ebaae031-4147-4189-b3a8-de344e528231', 'bar1', false, '54f43c6b-56a1-4a58-92fb-7a8147ad8eef');
+SELECT * FROM products;
+SELECT * FROM categories;
+_________________________________________________________________________________________________________________________________________
+
+admins-MacBook-Pro:postgresql_demo lourdesmonahan$ psql -f scripts.sql the_acme_db;
+DROP TABLE
+DROP TABLE
+CREATE TABLE
+CREATE TABLE
+INSERT 0 1
+INSERT 0 1
+INSERT 0 1
+INSERT 0 1
+psql:scripts.sql:27: ERROR:  insert or update on table "products" violates foreign key constraint "products_category_id_fkey"
+DETAIL:  Key (category_id)=(54f43c6b-56a1-4a58-92fb-7a8147ad8eef) is not present in table "categories".
+                  id                  | name | in_stock |             category_id
+--------------------------------------+------+----------+--------------------------------------
+ e4d3fdab-00ca-4c1e-abd2-a24cbbe01a66 | foo1 | t        | a1eb855a-1dd3-4aec-9dd7-aff78be20d0e
+ 985b402f-b6a3-4f0a-8bb9-860662620415 | foo2 | t        | a1eb855a-1dd3-4aec-9dd7-aff78be20d0e
+(2 rows)
+
+                  id                  |     name
+--------------------------------------+--------------
+ a1eb855a-1dd3-4aec-9dd7-aff78be20d0e | foo category
+ fe5a1929-78f2-4c94-a78c-d548952981ea | bar category
+(2 rows)
+
+admins-MacBook-Pro:postgresql_demo lourdesmonahan$
+
